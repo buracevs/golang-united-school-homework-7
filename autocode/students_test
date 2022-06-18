@@ -2,6 +2,8 @@ package coverage
 
 import (
 	"os"
+	"testing"
+	"time"
 )
 
 // DO NOT EDIT THIS FUNCTION
@@ -17,4 +19,161 @@ func init() {
 }
 
 // WRITE YOUR CODE BELOW
+var people People = []Person{
+	{
+		firstName: "John",
+		lastName : "Deere",
+		birthDay : time.Date(2020, 11, 9, 7, 0, 0, 0, time.UTC),
+	},
+	{
+		firstName: "Henry",
+		lastName : "Ford",
+		birthDay : time.Now(),
+	},
+	{
+		firstName: "Soitiro",
+		lastName : "Honda",
+		birthDay : time.Now(),
+	},
+	{
+		firstName: "Henry",
+		lastName : "Xavier",
+		birthDay : time.Now(),
+	},
+}
 
+func TestPeopleLenReturnsCorrectValue(t *testing.T){
+
+	var actual = people.Len()
+	expected:=4
+
+	if actual != expected{
+		t.Errorf("Expected was:%v, but actuals was:%v", expected, actual)
+	}
+}
+
+func TestPeopleSwap(t *testing.T){
+
+	people.Swap(0,2)
+	
+	if people[0].firstName != "Soitiro"{
+		t.Errorf("Expected was:%v, but actuals was:%v", people[2].firstName, people[0].firstName)
+	}
+}
+
+func TestPeopleLessByBirthDayRetrurnsFalse(t *testing.T){
+
+	actual := people.Less(0,1)
+
+	if actual{
+		t.Errorf("Test People Less By Birth Day Retrurns False failed")
+	} 
+}
+
+func TestPeopleLessByBirthDayRetrurnsTrue(t *testing.T){
+
+	actual := people.Less(1,0)
+
+	if !actual{
+		t.Errorf("Test People Less By Birth Day Retrurns True failed")
+	} 
+}
+
+func TestPeopleLessByFirstRetrurnsTrue(t *testing.T){
+
+	actual := people.Less(1,2)
+
+	if !actual{
+		t.Errorf("Test People Less By First Retrurns True failed")
+	} 
+}
+
+func TestPeopleLessByLastRetrurnsTrue(t *testing.T){
+
+	actual := people.Less(1,3)
+
+	if !actual{
+		t.Errorf("Test People Less By LastRetrurns True failed")
+	} 
+}
+
+func TestNewMatrix(t *testing.T){
+	str  := "1 \n 2"
+
+	_, err := New(str)
+
+	if err != nil{
+		t.Errorf("Error should be nil but was:%v", err)
+	}
+}
+
+func TestNewMatrixConvertionError(t *testing.T){
+	str  := "1 \n 2 \n hello"
+
+	_, err := New(str)
+
+	if err == nil{
+		t.Error("Error should not be nil")
+	}
+}
+
+func TestNewMatrixShouldBeNilErrorReturned(t *testing.T){
+	str  := "1 \n 2 3 4"
+
+	_, err := New(str)
+
+	if err == nil{
+		if err.Error() != "Rows need to be the same length"{
+			t.Error("Error should not be nil, error should be[Rows need to be the same length]")
+		}
+		
+	}
+}
+
+func TestMatrixRows(t *testing.T){
+	str  := "1 \n 2"
+
+	mtx, _ := New(str)
+
+	expected :=mtx.Rows()
+
+	if expected[0][0] != 1{
+		t.Errorf("Expected 1 but was %v", expected[0][0])
+	}
+}
+
+func TestMatrixCols(t *testing.T){
+	str  := "1 \n 2"
+
+	mtx, _ := New(str)
+
+	expected :=mtx.Cols()
+
+	if expected[0][1] != 2{
+		t.Errorf("Expected 2 but was %v", expected[0][1])
+	}
+}
+
+func TestMatrixSetReturnsTrue(t *testing.T){
+	str  := "1 \n 2"
+
+	mtx, _ := New(str)
+
+	result := mtx.Set(0,0,55)
+
+	if !result{
+		t.Error("Expected to be set")
+	}
+}
+
+func TestMatrixSetReturnsFalse(t *testing.T){
+	str  := "1 \n 2"
+
+	mtx, _ := New(str)
+
+	result := mtx.Set(0,1,55)
+
+	if result{
+		t.Error("Expected not to be set")
+	}
+}
